@@ -1,0 +1,95 @@
+epicsrec=/home/mfivecoa/purdue/epics/EpicsRec CD=. filter="*" {
+ MANIFEST.in
+ README.txt
+ development.db
+ development.ini
+ ez_setup.py
+ majors.txt
+ oldrecs.dump
+ setup.cfg
+ setup.py
+ teamInfo.txt
+ teams.txt
+ test.ini
+ EpicsRec.egg-info=EpicsRec.egg-info {
+  PKG-INFO
+  SOURCES.txt
+  dependency_links.txt
+  entry_points.txt
+  not-zip-safe
+  paster_plugins.txt
+  requires.txt
+  top_level.txt
+ }
+ docs=docs {
+  index.txt
+ }
+ epicsrec=epicsrec {
+  __init__.py
+  websetup.py
+  config=config {
+   __init__.py
+   deployment.ini_tmpl
+   environment.py
+   middleware.py
+   routing.py
+  }
+  controllers=controllers {
+   __init__.py
+   choose.py
+   error.py
+  }
+  lib=lib {
+   7-12-09.dat
+   __init__.py
+   app_globals.py
+   asdf
+   base.py
+   data.txt
+   helpers.py
+   majors.txt
+   oldrecs.dump
+   recomender.py
+   scrape_teams.py
+   teamInfo.txt
+   teams.txt
+  }
+  model=model {
+   __init__.py
+   meta.py
+   recomender.py
+  }
+  public=public {
+   bg.png
+   favicon.ico
+   index.html
+   pylons-logo.gif
+   img=img{
+    button-green.png
+    button-red.png
+    button-unlit.png
+    button-yellow.png
+   }
+   css=css{
+    rec.css
+   }
+   js=js{
+    buttons.js
+    jquery-1.2.6.pack.js
+   }
+  }
+  templates=templates {
+   data.txt
+   rec.mak
+   xml_recs.mak
+  }
+  tests=tests {
+   __init__.py
+   test_models.py
+   functional=functional {
+    __init__.py
+    test_choose.py
+   }
+  }
+ }
+}

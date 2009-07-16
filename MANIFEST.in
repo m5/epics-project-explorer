@@ -1,0 +1,3 @@
+include epicsrec/config/deployment.ini_tmpl
+recursive-include epicsrec/public *
+recursive-include epicsrec/templates *

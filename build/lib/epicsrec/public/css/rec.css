@@ -1,0 +1,150 @@
+img{
+    border:0;
+    padding:0;
+    margin:0;
+}
+html{
+    background:#101031;
+    color:#cecaff;
+    font-family:helvetica;
+}
+
+a {
+    color:#8e8abf;
+    text-decoration:none;
+}
+a:hover{
+    text-decoration:underline;
+}
+#container{
+    width:920px;
+    margin:0 auto;
+}
+#majors_container{
+    width:260px;
+    float:left;
+}
+#teams_container{
+    float:left;
+    border: 1px solid #202061;
+    width:900px;
+}
+fieldset{
+    border:1px solid #202061;
+    float:left;
+    text-align:center;
+}
+span.button{
+    border-style:solid;
+    border-width:0px;
+    border-color:#202061;
+    float:left;
+    height:49px;
+    width:49px;
+    color:#cecaff;
+    text-align:center;
+    font-weight:bold;
+    font-size:9px;
+    padding:1px;
+    z-index:0;
+    background-image:url('/img/montage.png');
+}
+.button.wrapper{
+    margin:0px;
+    border:0px;
+    padding:0px;
+}
+.button.unlit{
+}
+.button.active{
+    background-position: -50px 0px;
+}
+.button.depressed{
+    background-position: -100px 0px;
+}
+.button.recomended{
+    background-position: -250px 0px;
+}
+.button.recomended.depressed{
+    background-position: -3000px 0px;
+}
+.button.selected{
+    background-position: -150px 0px;
+}
+.button.selected.depressed{
+    background-position: -200px 0px;
+}
+.button.hover{
+    position:relative;
+    left:-50px;
+    z-index:1;
+}
+#description{
+    position:absolute;
+    left:0;
+    right:0;
+    padding: 4px;
+    border: 2px solid #303082;
+    background-color:#151541;
+    z-index:2;
+    width:400px;
+    display:none;
+}
+.information{
+    display:none;
+}
+#school{
+    position:absolute;
+    display:none;
+    padding:0 4px 0 5px;
+    border: 1px solid #cecaff;
+    font-size:10px;
+    background:#101031;
+    color:#cecaff;
+}
+#information{
+    font-size:12px;
+    width:630px;
+    height:450px;
+    float:right;
+    overflow:auto;
+    padding-right:10px
+}
+.team_info{
+    float:left;
+    clear:none;
+}
+
+#information .team_info li{
+    clear:none;
+}
+#information li{
+    font-size:14px;
+    margin-bottom:12px;
+    margin-top:50px;
+    clear:both;
+}
+#information .button{
+    vertical-align:bottom;
+    clear:both;
+    position:relative;
+    top:-30px;
+}
+#information .team_info li{
+    list-style-type:none;
+    margin-bottom: 8px;
+    margin-top:0px;
+}
+    
+.button_label{
+    position:relative;
+    top:30px;
+}
+#image{
+    float:right;
+    margin:10px;
+}
+.inftext{
+    margin-top:5px;
+    padding-top:10px;
+}
