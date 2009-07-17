@@ -36,4 +36,3 @@ class Globals(object):
         self.team_names = [ t.abbr for t in self.teams ]
         self.major_map = major_map.generate_map(self.majors)
         self.identifiers = self.team_names + self.major_names
-        print self.identifiers

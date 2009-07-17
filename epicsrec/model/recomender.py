@@ -52,7 +52,7 @@ class dbRecomender:
             if (results.count() > 0):
                 rec = results.first()
                 rec.weight += weight
-                if rec.weight < 0:
+                if rec.weight <= 0:
                     Session.delete(rec)
                 else:
                     Session.add(rec)
@@ -126,8 +126,6 @@ class dbRecomender:
                     recomendations[rec] = result.weight/weight
                     rw[rec] = weight
 
-        print "recs", recomendations
-        print "weight", rw
         rec_list = recomendations.items()
         rec_list.sort(key=lambda x:-x[1])
         return rec_list

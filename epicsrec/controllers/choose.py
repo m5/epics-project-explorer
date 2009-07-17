@@ -22,6 +22,7 @@ class ChooseController(BaseController):
         # Return a rendered template
         #return render('/choose.mako')
         # or, return a response
+	print request.environ.get('REMOTE_ADDR') 
         sid = request.environ.get('REMOTE_ADDR') + str(time.time())
         c.sid_hash = hashlib.md5( sid ).hexdigest()
         #soup =  BeautifulSoup(render('/rec.mak'))
@@ -49,7 +50,6 @@ class ChooseController(BaseController):
         for recomendation in recomendations:
             if recomendation[0] in g.team_names:
                 c.recs.append(recomendation[0])
-        print recomendations
         c.recs = c.recs[:3]
         response.content_type = 'text/xml'
         return render('/xml_recs.mak')

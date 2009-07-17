@@ -3,8 +3,8 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 5
-_modified_time = 1247770591.757365
-_template_filename='/home/mfivecoa/purdue/epics/EpicsRec/epicsrec/templates/rec.mak'
+_modified_time = 1247796360.84952
+_template_filename='/root/EpicsRec/epicsrec/templates/rec.mak'
 _template_uri='/rec.mak'
 _template_cache=cache.Cache(__name__, _modified_time)
 _source_encoding='utf-8'
@@ -22,7 +22,7 @@ def render_body(context,**pageargs):
         g = context.get('g', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 1
-        __M_writer(u'<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"\n"http://www.w3.org/TR/html4/strict.dtd">\n\n<html>\n')
+        __M_writer(u'\n<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"\n"http://www.w3.org/TR/html14/loose.tdt">\n<html>\n')
         # SOURCE LINE 5
         self.seen_css = set() 
         
