@@ -12,6 +12,7 @@ html{
 a {
     color:#8e8abf;
     text-decoration:none;
+    outline-style:none;
 }
 a:hover{
     text-decoration:underline;
@@ -34,7 +35,7 @@ fieldset{
     float:left;
     text-align:center;
 }
-span.button{
+.button{
     border-style:solid;
     border-width:0px;
     border-color:#202061;
@@ -148,4 +149,52 @@ span.button{
 .inftext{
     margin-top:5px;
     padding-top:10px;
+}
+dl.accordian{
+    list-style-type:none;
+}
+dl.accordian ul{
+    list-style-type:none;
+}
+dl.accordian a{
+}
+
+dl.accordian dt{
+    color:#cecaff;
+    text-align: center;
+    height:25px;
+    background-image:url('/img/school-button.png');
+    background-repeat:no-repeat;
+    padding: 0, 2px, 0, 2px;
+    border-color: #303060;
+    clear: left;
+    padding-top:5px;
+}
+dl.accordian dd{
+    clear: left;
+    display: block;
+    margin-left: 0px;
+}
+
+h1 {
+    text-align: center;
+}
+#pointer {
+    float:left;
+    display:block;
+}
+#tut_text {
+    font-size: medium;
+    position:absolute;
+    float:left;
+    display:block;
+    left:70px;
+}
+#tutorial {
+    z-index:1;
+    position:absolute;
+    float:left;
+    width:500px;
+    left:350px;
+    top:100px;
 }

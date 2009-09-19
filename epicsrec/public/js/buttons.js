@@ -17,19 +17,57 @@ function cfade(obj, trans_time){
     return obj;
 }
 
+function init_accordian(){
+    $("dl.accordian dd").hide();
+    $("dl.accordian a").click(function(){
+            $("dd:visible").slideUp("slow");
+            $(this).next().slideDown("slow",tutor_major);
+            return false;
+            });
+}
+
+var school_selected = false
+var major_selected = false
+var team_selected = false
+
+function tutor_major(){
+    school_selected = true;
+    if (!major_selected){
+        var tut_top = $("dd:visible").offset().top + 30 + "px";
+        $("#tutorial").css({"top":tut_top,"left":"310px"});
+        $("#tutorial").text("Choose your major...");
+    }
+}
+
+function tutor_teams(){
+    if(!major_selected){
+        $("#tutorial").css({"top":"400px","left":"350px"});
+        $("#tutorial").html("We think you might like one of the teams highlighted below. <p> Click on any teams you are interested in to learn more.");
+    }
+    major_selected = true
+}
+
+function tutor_learn(){
+    if(!team_selected){
+        $("#tutorial").text("Your selections will be used to help others find teams they like.");
+        $("#tutorial").css({"top":"570px","left":"300px"});
+    }
+    team_selected = true
+}
+
 $(document).ready(function(){
-    $("span.button").mousedown(function(){
+    init_accordian();
+    $(".button").mousedown(function(){
         $(this).addClass("depressed");
     });
 
-
-    $("span.button").mouseout(function(){
+    $(".button").mouseout(function(){
         $(this).removeClass("depressed active");
     });
-    $("span.button").mouseover(function(){
+    $(".button").mouseover(function(){
         $(this).addClass("active");
     });
-    $("span.button").mouseup(
+    $(".button").mouseup(
         function(){
             $(this).removeClass("depressed");
             $(".button").stop(1,1);
@@ -44,7 +82,12 @@ $(document).ready(function(){
                 var url = '/choose/info/' + s_name;
 		var is_team = $(this).filter('.team').size();
 		if ( is_team ){
-			$('#information').load( url );
+            if(!team_selected){
+                tutor_learn();
+                $("#tutorial").fadeTo(9000,1)
+                $("#tutorial").fadeOut("slow")
+            }
+            $('#information').load( url );
 		}
             }
             $.post('/choose/ajax',
@@ -67,33 +110,11 @@ $(document).ready(function(){
                             cfade(this,700);
                             $(this).removeClass("recomended");
                         }
+                        tutor_teams();
                     });
                  }
             );
         });
-    var lit_school = '';
-    var fgcolor = '#cecaff';
-    var bgcolor = '#202061';
-    $(".button.major").each(function(i){
-        var school = $(this).children("[name='school']").text();
-        var school_print = school.replace(/\_/,' ');
-        var first_button = $('.'+school+':first');
-        var first_x = first_button.offset().left;
-        var first_y = first_button.offset().top;
-        $(this).bind("mouseenter",function(){
-	    if (school!=lit_school){
-	        $('.'+school).stop(1,0).css({borderColor:fgcolor});
-                $('.'+lit_school).stop(1,1).css({borderColor:bgcolor});
-                $('#school').html(school_print).css({opacity:0.7,top:first_y,left:first_x,borderColor:fgcolor}).stop(1,1).show();
-		lit_school = school;
-	    }
-        });
-    });
-    $("#majors_container").bind("mouseleave",function(){
-        $('.'+lit_school).stop(1,1).animate({borderColor:bgcolor});
-        $('#school').stop(1,1).hide('slow');
-	lit_school = '';
-    });
     $(".button.team").each(function(i){
         var tooltip = $("#description");
         var description_suspect =  $(this).children("[name='title']").text() + "<br/>"

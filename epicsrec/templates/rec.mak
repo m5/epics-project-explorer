@@ -35,37 +35,22 @@
     <body>
 		<div id="container">
 		<div id="majors_container">
-			%for row in g.major_map:
-				%for m in row:
-				<% school = m['school'] %>
-				<% major  = m['major'] %>
-				<% css    = m['css'] %>
-				%if major:
-            	<span name="${school+'-'+major}" style="${css}" class="button major ${school}">
-					<span class="button_label">
-					${major.replace('_',' ')}
-					</span>
-					<span class="information" name="school">${school}</span>
-				</span>
-				%endif
-				%endfor
+			<dl id="schools" class="accordian">
+			%for school, majors in g.majors.items():
+				<a href='#'><dt>${school.replace('_',' ')}</dt></a>
+				<dd style="height: ${50*((4+len(majors)) // 5)}px;">			
+					%for major in majors:
+						<span name="${school+'-'+major}" class="button major ${school}">
+							<span class="button_label">${major}</span>
+							<span class="information">${school}</span>
+						</span>
+					%endfor
+				</dd>
 			%endfor
-			<span id="school"></span>
+			</ul>
 		</div>
 		<div id="information">
 			<h1>Epics Project Explorer</h1>
-			<ul>
-			<li>
-			<span class="button selected"></span>
-			<span class="inftext">Select any disciplines on the left that interest you.</span>
-			</li>
-			<li>
-			<span class="button recomended"></span>
-			<span calss="inftext">Select any interesting projects below for more information.</span>
-			</li>
-			</ul>
-		
-		
 		</div>
 		<div id="teams_container">
 		%for team in g.teams:
@@ -84,6 +69,7 @@
 		%endfor
 		</div>
 		<span id="description" class="popup"></span>
+		<div id="tutorial">Choose your school...</div>
 		</div>
 	<input type="hidden" id="sid_hash" value="${c.sid_hash}">
     </body>

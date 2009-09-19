@@ -3,8 +3,8 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 5
-_modified_time = 1247796360.84952
-_template_filename='/root/EpicsRec/epicsrec/templates/rec.mak'
+_modified_time = 1253334414.87445
+_template_filename='/home/mfivecoa/src/pylons/epicsrec/epicsrec/templates/rec.mak'
 _template_uri='/rec.mak'
 _template_cache=cache.Cache(__name__, _modified_time)
 _source_encoding='utf-8'
@@ -16,9 +16,10 @@ def render_body(context,**pageargs):
     context.caller_stack._push_frame()
     try:
         __M_locals = __M_dict_builtin(pageargs=pageargs)
-        self = context.get('self', UNDEFINED)
-        set = context.get('set', UNDEFINED)
+        len = context.get('len', UNDEFINED)
         c = context.get('c', UNDEFINED)
+        set = context.get('set', UNDEFINED)
+        self = context.get('self', UNDEFINED)
         g = context.get('g', UNDEFINED)
         __M_writer = context.writer()
         # SOURCE LINE 1
@@ -26,12 +27,10 @@ def render_body(context,**pageargs):
         # SOURCE LINE 5
         self.seen_css = set() 
         
-        __M_locals.update(__M_dict_builtin([(__M_key, __M_locals_builtin()[__M_key]) for __M_key in [] if __M_key in __M_locals_builtin()]))
         __M_writer(u'\n')
         # SOURCE LINE 6
         self.seen_js = set() 
         
-        __M_locals.update(__M_dict_builtin([(__M_key, __M_locals_builtin()[__M_key]) for __M_key in [] if __M_key in __M_locals_builtin()]))
         __M_writer(u'\n    <head>\n\t')
         # SOURCE LINE 8
         __M_writer(escape(self.css()))
@@ -46,66 +45,55 @@ def render_body(context,**pageargs):
         # SOURCE LINE 27
         __M_writer(u'\n\t')
         # SOURCE LINE 32
-        __M_writer(u'\n\n\n    <body>\n\t\t<div id="container">\n\t\t<div id="majors_container">\n')
-        # SOURCE LINE 38
-        for row in g.major_map:
-            # SOURCE LINE 39
-            for m in row:
-                # SOURCE LINE 40
-                __M_writer(u'\t\t\t\t')
-                school = m['school'] 
-                
-                __M_locals.update(__M_dict_builtin([(__M_key, __M_locals_builtin()[__M_key]) for __M_key in ['school'] if __M_key in __M_locals_builtin()]))
-                __M_writer(u'\n\t\t\t\t')
-                # SOURCE LINE 41
-                major  = m['major'] 
-                
-                __M_locals.update(__M_dict_builtin([(__M_key, __M_locals_builtin()[__M_key]) for __M_key in ['major'] if __M_key in __M_locals_builtin()]))
-                __M_writer(u'\n\t\t\t\t')
-                # SOURCE LINE 42
-                css    = m['css'] 
-                
-                __M_locals.update(__M_dict_builtin([(__M_key, __M_locals_builtin()[__M_key]) for __M_key in ['css'] if __M_key in __M_locals_builtin()]))
-                __M_writer(u'\n')
+        __M_writer(u'\n\n\n    <body>\n\t\t<div id="container">\n\t\t<div id="majors_container">\n\t\t\t<dl id="schools" class="accordian">\n')
+        # SOURCE LINE 39
+        for school, majors in g.majors.items():
+            # SOURCE LINE 40
+            __M_writer(u"\t\t\t\t<a href='#'><dt>")
+            __M_writer(escape(school.replace('_',' ')))
+            __M_writer(u'</dt></a>\n\t\t\t\t<dd style="height: ')
+            # SOURCE LINE 41
+            __M_writer(escape(50*((4+len(majors)) // 5)))
+            __M_writer(u'px;">\t\t\t\n')
+            # SOURCE LINE 42
+            for major in majors:
                 # SOURCE LINE 43
-                if major:
-                    # SOURCE LINE 44
-                    __M_writer(u'            \t<span name="')
-                    __M_writer(escape(school+'-'+major))
-                    __M_writer(u'" style="')
-                    __M_writer(escape(css))
-                    __M_writer(u'" class="button major ')
-                    __M_writer(escape(school))
-                    __M_writer(u'">\n\t\t\t\t\t<span class="button_label">\n\t\t\t\t\t')
-                    # SOURCE LINE 46
-                    __M_writer(escape(major.replace('_',' ')))
-                    __M_writer(u'\n\t\t\t\t\t</span>\n\t\t\t\t\t<span class="information" name="school">')
-                    # SOURCE LINE 48
-                    __M_writer(escape(school))
-                    __M_writer(u'</span>\n\t\t\t\t</span>\n')
-        # SOURCE LINE 53
-        __M_writer(u'\t\t\t<span id="school"></span>\n\t\t</div>\n\t\t<div id="information">\n\t\t\t<h1>Epics Project Explorer</h1>\n\t\t\t<ul>\n\t\t\t<li>\n\t\t\t<span class="button selected"></span>\n\t\t\t<span class="inftext">Select any disciplines on the left that interest you.</span>\n\t\t\t</li>\n\t\t\t<li>\n\t\t\t<span class="button recomended"></span>\n\t\t\t<span calss="inftext">Select any interesting projects below for more information.</span>\n\t\t\t</li>\n\t\t\t</ul>\n\t\t\n\t\t\n\t\t</div>\n\t\t<div id="teams_container">\n')
-        # SOURCE LINE 71
+                __M_writer(u'\t\t\t\t\t\t<span name="')
+                __M_writer(escape(school+'-'+major))
+                __M_writer(u'" class="button major ')
+                __M_writer(escape(school))
+                __M_writer(u'">\n\t\t\t\t\t\t\t<span class="button_label">')
+                # SOURCE LINE 44
+                __M_writer(escape(major))
+                __M_writer(u'</span>\n\t\t\t\t\t\t\t<span class="information">')
+                # SOURCE LINE 45
+                __M_writer(escape(school))
+                __M_writer(u'</span>\n\t\t\t\t\t\t</span>\n')
+            # SOURCE LINE 48
+            __M_writer(u'\t\t\t\t</dd>\n')
+        # SOURCE LINE 50
+        __M_writer(u'\t\t\t</ul>\n\t\t</div>\n\t\t<div id="information">\n\t\t\t<h1>Epics Project Explorer</h1>\n\t\t</div>\n\t\t<div id="teams_container">\n')
+        # SOURCE LINE 56
         for team in g.teams:
-            # SOURCE LINE 72
+            # SOURCE LINE 57
             __M_writer(u'           \t<span name="')
             __M_writer(escape(team))
             __M_writer(u'" class="button team">\n\t\t\t\t<span class="button_label"name="abbr">\n\t\t\t\t\t')
-            # SOURCE LINE 74
+            # SOURCE LINE 59
             __M_writer(escape(team))
             __M_writer(u'\n\t\t\t\t</span>\n\t\t\t\t<span class="information" name="title">\n\t\t\t\t\t')
-            # SOURCE LINE 77
+            # SOURCE LINE 62
             __M_writer(escape(team.name))
             __M_writer(u'\n\t\t\t\t</span>\n\t\t\t\t<span class="information" name="description">\n\t\t\t\t\t')
-            # SOURCE LINE 80
+            # SOURCE LINE 65
             __M_writer(escape(team.info))
             __M_writer(u'\n\t\t\t\t</span>\n\t\t\t\t<a class="information" href="')
-            # SOURCE LINE 82
+            # SOURCE LINE 67
             __M_writer(escape(team.link))
             __M_writer(u'"></a>\n\t\t</span>\n')
-        # SOURCE LINE 85
-        __M_writer(u'\t\t</div>\n\t\t<span id="description" class="popup"></span>\n\t\t</div>\n\t<input type="hidden" id="sid_hash" value="')
-        # SOURCE LINE 88
+        # SOURCE LINE 70
+        __M_writer(u'\t\t</div>\n\t\t<span id="description" class="popup"></span>\n\t\t<div id="tutorial">Choose your school...</div>\n\t\t</div>\n\t<input type="hidden" id="sid_hash" value="')
+        # SOURCE LINE 74
         __M_writer(escape(c.sid_hash))
         __M_writer(u'">\n    </body>\n</html>\n')
         return ''
