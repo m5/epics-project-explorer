@@ -38,7 +38,7 @@
 			<dl id="schools" class="accordian">
 			%for school, majors in g.majors.items():
 				<a href='#'><dt>${school.replace('_',' ')}</dt></a>
-				<dd style="height: ${50*((4+len(majors)) // 5)}px;">			
+				<dd style="height: ${3+50*((4+len(majors)) // 5)}px;">			
 					%for major in majors:
 						<span name="${school+'-'+major}" class="button major ${school}">
 							<span class="button_label">${major}</span>
