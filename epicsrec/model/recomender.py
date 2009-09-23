@@ -25,14 +25,11 @@ class dbRecomender:
 
 
     def add(self,item,relations,weight=1):
-        result = Session.query(model.Suggestable).filter_by(item=item)
+        result = Session.query(model.Suggestable).filter_by(id=item)
         if (result.count() > 0):
             suggestable = result.first()
             suggestable.weight += weight
-            if suggestable.weight <= 0:
-                Session.delete(suggestable)
-            else:
-                Session.add(suggestable)
+            Session.add(suggestable)
         else:
             suggestable = model.Suggestable(item)
             Session.add(suggestable)
@@ -41,24 +38,24 @@ class dbRecomender:
             if (relation == item):
                 continue
 
-            results = Session.query(model.Rec).filter(
+            results = Session.query(model.Suggestion).filter(
                     or_(
-                        and_( model.Rec.item == relation,
-                              model.Rec.rec  == item    ),
-                        and_( model.Rec.item == item,
-                              model.Rec.rec  == relation)
+                        and_( model.Suggestion.suggested == relation,
+                              model.Suggestion.chosen    == item    ),
+                        and_( model.Suggestion.suggested == item,
+                              model.Suggestion.chosen    == relation)
                         )
                     )
             if (results.count() > 0):
-                rec = results.first()
-                rec.weight += weight
-                if rec.weight <= 0:
-                    Session.delete(rec)
+                suggestion = results.first()
+                suggestion.weight += weight
+                if suggestion.weight <= 0:
+                    Session.delete(suggestion)
                 else:
-                    Session.add(rec)
+                    Session.add(suggestion)
             else:
-                rec = model.Rec(item,relation)
-                Session.add(rec)
+                suggestion = model.Suggestion(item,relation)
+                Session.add(suggestion)
         Session.commit()
 
     def remove(self,item,relations,weight=1):
@@ -68,18 +65,36 @@ class dbRecomender:
         for i in range(len(items)):
             self.add(items[i],items)
 
-    def add_row(self,items):
+    def remove_row(self,items):
         for i in range(len(items)):
             self.remove(items[i],items)
 
+    def modify_by_sid(self, sid_hash, item, weight):
+        results = Session.query(model.Interaction).filter_by(sid_hash=sid_hash)
+        if (results.count() == 0):
+            interaction = results.first()
+        else:
+            interaction = model.Interaction(sid_hash)
+
+        previous_choices = []
+        for choice in interaction.choices:
+           previous_choices.append(choice.id)
+
+        self.add(item,relations,weight)
+        like = model.Session_Like(sid_hash)
+        chosen = Session.query(model.Suggestable).filter_by(
+        Session.add(like)
+        Session.commit()
+
     def add_by_sid(self,sid_hash, item):
-        results = Session.query(model.Like).filter_by(sid_hash=sid_hash)
+        results = Session.query(model.Session_Like).filter_by(sid_hash=sid_hash)
         relations = []
         if (results.count() > 0):
             for result in results:
                relations.append(result.item)
         self.add(item,relations)
-        like = model.Like(sid_hash,item)
+        like = model.Session_Like(sid_hash)
+        chosen = Session.query(model.Suggestable).filter_by(
         Session.add(like)
         Session.commit()
 
