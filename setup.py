@@ -15,7 +15,8 @@ setup(
     install_requires=[
         "Pylons>=0.9.7",
         "SQLAlchemy>=0.5",
-	"BeautifulSoup>=3.0",
+        "BeautifulSoup>=3.0",
+        "FormAlchemy>=1.2.1",
     ],
     setup_requires=["PasteScript>=1.6.3"],
     packages=find_packages(exclude=['ez_setup']),

@@ -22,8 +22,18 @@ class ChooseController(BaseController):
         # Return a rendered template
         #return render('/choose.mako')
         # or, return a response
-	print request.environ.get('REMOTE_ADDR') 
+        print request.environ.get('REMOTE_ADDR') 
         sid = request.environ.get('REMOTE_ADDR') + str(time.time())
+        c.majors = {}
+        c.teams = []
+        for item in Session.query(model.Category).all():
+            if item.name == 'team':
+                c.teams = item.members
+            else:
+                c.majors[item.name] = item.members
+                for member in item.members:
+                    print member
+        print c.categories
         c.sid_hash = hashlib.md5( sid ).hexdigest()
         #soup =  BeautifulSoup(render('/rec.mak'))
         return render('/rec.mak')
@@ -39,6 +49,9 @@ class ChooseController(BaseController):
     def ajax(self):
         selected = request.POST.getone('selected').lower()
         deselected = request.POST.getone('deselected').lower()
+        print "---!!!###!!!---"
+        print selected
+        print deselected
         sid_hash = request.POST.getone('sid_hash')
         recomender = dbRecomender()
         if selected:
@@ -46,11 +59,10 @@ class ChooseController(BaseController):
         if deselected:
             recomender.remove_by_sid(sid_hash,deselected)
         recomendations = recomender.recomend_by_sid(sid_hash)
-        c.recs = []
-        for recomendation in recomendations:
-            if recomendation[0] in g.team_names:
-                c.recs.append(recomendation[0])
+        c.recs = map(lambda x: x[0], recomendations)
         c.recs = c.recs[:3]
+        print "---!!!###!!!---"
+        print c.recs
         response.content_type = 'text/xml'
         return render('/xml_recs.mak')
 

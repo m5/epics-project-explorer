@@ -26,11 +26,11 @@ class dbRecomender:
 
     def add(self,item,relations,weight=1):
         print item, relations
-        result = Session.query(model.Suggestable).filter_by(name=item)
+        result = Session.query(model.Suggestable).filter_by(id=item)
         if (result.count() > 0):
             item_suggestable = result.first()
         else:
-            item_suggestable = model.Suggestable(item)
+            return
 
         item_suggestable.weight += weight
         Session.add(item_suggestable)
@@ -86,8 +86,15 @@ class dbRecomender:
             interaction = results.first()
         else:
             interaction = model.Interaction(sid_hash)
+        print interaction
+        print interaction.choices
+        choices = map(lambda x: x.id, interaction.choices)
         if interaction.choices:
-            self.add(item,interaction.choices,weight)
+            self.add(item,choices,weight)
+        item_suggestable = Session.query(model.Suggestable).filter_by(id=item).first()
+        if item_suggestable:
+            interaction.choices.append(item_suggestable)
+
         Session.add(interaction)
         Session.commit()
 
@@ -98,11 +105,9 @@ class dbRecomender:
         self.modify_by_sid(sid_hash, item, -1)
 
     def recomend_by_sid(self,sid_hash):
-        results = Session.query(model.Interaction).filter_by(sid_hash=sid_hash)
-        choices = []
-        if (results.count() > 0):
-            for result in results:
-                choices.append(result.choices)
+        interaction = Session.query(model.Interaction).filter_by(sid_hash=sid_hash).first()
+        if interaction:
+            choices = map(lambda x: x.id, interaction.choices)
         if ( len(choices) > 0 ):
             return self.recomend(choices)
         else:
@@ -112,8 +117,14 @@ class dbRecomender:
         recomendations = {}
         rw = {}
         for item in items:
-            suggestions = Session.query(model.Suggestion).filter(or_(model.Suggestion.high_choice_id==item, model.Suggestion.low_choice_id==item))
-            for suggestion in suggestions:
+            if not item: continue
+            suggestions = Session.query(model.Suggestion).filter(
+                    or_(
+                        model.Suggestion.high_choice_id==item, 
+                        model.Suggestion.low_choice_id==item
+                        )
+                    )
+            for suggestion in suggestions.all():
                 high = suggestion.high_choice
                 low = suggestion.low_choice
                 rec = high if high.id != item else low
@@ -122,7 +133,7 @@ class dbRecomender:
 
                 results = Session.query(model.Suggestable).filter_by(id=rec)
 
-                weight = rec.weight
+                weight = rec.weight or 1
 
                 if rec.id in recomendations.keys():
                     recomendations[rec.id] += suggestion.weight/weight
@@ -132,4 +143,5 @@ class dbRecomender:
 
         rec_list = [ (x,y/len(items)) for x,y in recomendations.items()]
         rec_list.sort(key=lambda x:-x[1])
+        print "$$$$$$$$$$$$$", rec_list, filter(lambda x: x[0] not in items, rec_list)
         return filter(lambda x: x[0] not in items, rec_list)

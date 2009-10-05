@@ -36,12 +36,12 @@
 		<div id="container">
 		<div id="majors_container">
 			<dl id="schools" class="accordian">
-			%for school, majors in g.majors.items():
+			%for school, majors in c.majors.items():
 				<a href='#'><dt>${school.replace('_',' ')}</dt></a>
 				<dd style="height: ${3+50*((4+len(majors)) // 5)}px;">			
-					%for major in majors:
-						<span name="${school+'-'+major}" class="button major ${school}">
-							<span class="button_label">${major}</span>
+					%for suggestable in majors:
+						<span name="${suggestable.id}" class="button major ${school}">
+							<span class="button_label">${suggestable.name}</span>
 							<span class="information">${school}</span>
 						</span>
 					%endfor
@@ -53,18 +53,18 @@
 			<h1>Epics Project Explorer</h1>
 		</div>
 		<div id="teams_container">
-		%for team in g.teams:
-           	<span name="${team}" class="button team">
+		%for suggestable in c.teams:
+           	<span name="${suggestable.id}" class="button team">
 				<span class="button_label"name="abbr">
-					${team}
+					${suggestable.name}
 				</span>
 				<span class="information" name="title">
-					${team.name}
+					${suggestable.long_name}
 				</span>
 				<span class="information" name="description">
-					${team.info}
+					${suggestable.description}
 				</span>
-				<a class="information" href="${team.link}"></a>
+				<a class="information" href="${suggestable.link}"></a>
 		</span>
 		%endfor
 		</div>

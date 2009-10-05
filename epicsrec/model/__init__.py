@@ -33,13 +33,17 @@ suggestions_table = sa.Table("suggestions",meta.metadata,
 
 suggestables_table = sa.Table("suggestables",meta.metadata,
         sa.Column("id",       sa.types.Integer,     primary_key=True),
+        sa.Column("categoty_id", sa.types.Integer, sa.ForeignKey('categories.id')),
         sa.Column("name",     sa.types.String(100), nullable=True),
-        sa.Column("categoty_id", sa.types.String(100), sa.ForeignKey('categories.id')),
+        sa.Column("long_name",   sa.types.String, nullable=True),
+        sa.Column("link",        sa.types.String, nullable=True),
+        sa.Column("description", sa.types.String, nullable=True),
         sa.Column("weight",   sa.types.Integer,     nullable=False),
         sa.Column("timestamp",sa.types.Integer,     nullable=False)
         )
 
 aliases_table = sa.Table("aliases",meta.metadata,
+        sa.Column("id",       sa.types.Integer,     primary_key=True),
         sa.Column("name",     sa.types.String(100), nullable=True),
         sa.Column("refers_to_id",     sa.types.Integer,     sa.ForeignKey('suggestables.id')),
         )
@@ -61,7 +65,7 @@ class Category(object): pass
 class Alias(object): pass
 
 class Suggestable(object):
-    def __init__(self,name):
+    def __init__(self,name=None):
         self.name = name
         self.weight = 0
         self.timestamp = int(time.time())
@@ -69,27 +73,28 @@ class Suggestable(object):
         return "<suggestable id=%s, name=%s, weight=%s>"%(self.id,self.name,self.weight)
 
 class Suggestion(object):
-    def __init__(self,item1,item2):
-        if item1.id > item2.id:
-            high, low = item1, item2
-        else:
-            high, low = item2, item1
-        self.low_choice = low
-        self.high_choice = high
+    def __init__(self,item1=None,item2=None):
+        if item1 and item2:
+            if item1.id > item2.id:
+                high, low = item1, item2
+            else:
+                high, low = item2, item1
+            self.low_choice = low
+            self.high_choice = high
         self.timestamp = int(time.time())
         self.weight = 1
     def __repr__(self):
         return "<suggestion high=%s low=%s weight=%s>" % (self.high_choice.name, self.low_choice.name, self.weight)
 
 class Interaction(object):
-    def __init__(self,sid_hash):
+    def __init__(self,sid_hash=None):
         self.sid_hash = sid_hash
         self.timestamp = int(time.time())
 
 
 orm.mapper(Category, categories_table)
 orm.mapper(Alias, aliases_table, properties={
-    'refers_to': sa.orm.relation(Suggestable)
+    'refers_to': sa.orm.relation(Suggestable, backref='aliases')
     })
 orm.mapper(Suggestable, suggestables_table, properties={
     'category': sa.orm.relation(Category, backref='members')
