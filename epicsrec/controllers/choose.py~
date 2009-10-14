@@ -54,11 +54,15 @@ class ChooseController(BaseController):
         return render('/xml_recs.mak')
 
     def info(self, id):
-        for team in g.teams:
-            if team.abbr == id:
-                info = team.soup.find('ul','team_info')
-                return info.prettify()
-        return ''
+        print "#######################\n"*10
+             +"#######################\n"*10
+        print "id: ", id
+        team = Session.query(model.Suggestable).filter_by(id=id).first()
+        print "team: ", team
+        if team:
+            return team.html
+        else:
+            return ''
 
     def dict_ajax(self):
         selected = request.POST.getone('selected')

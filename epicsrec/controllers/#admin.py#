@@ -1,0 +1,99 @@
+import logging
+
+from pylons import request, response, session, tmpl_context as c
+from pylons.controllers.util import abort, redirect_to
+
+from epicsrec import model, forms
+from epicsrec.model import meta
+from epicsrec.lib.scrape_teams import scrape_teams
+from epicsrec.model.recomenender import dbRecomender
+
+from epicsrec.lib.base import BaseController, render
+from formalchemy.ext.pylons.admin import FormAlchemyAdminController
+
+
+log = logging.getLogger(__name__)
+
+class AdminController(BaseController):
+    def index(self):
+        #c.teams = meta.Session.query(model.Category).filter_by(name='team').all()
+        return render('update_teams.mak')
+
+    def scrape_teams(self):
+        team_category = meta.Session.query(model.Category).filter_by(name='team').first()
+        new_teams = scrape_teams()
+        if team_category:
+            old_teams = team_category.members
+        else:
+            team_category = model.Category()
+            team_category.name = 'team'
+            meta.Session.add(team_category)
+            old_teams = []
+        team_aliases = {}
+        for team in old_teams:
+            team_aliases[team.name] = team
+            for alias in team.aliases:
+                team_aliases[alias] = team
+        for team in new_teams:
+            if team.abbr in team_aliases:
+                new_team = team_aliases[team.abbr]
+            else:
+                new_team = model.Suggestable()
+                new_team.name = team.abbr
+                new_team.category = team_category
+
+            new_team.long_name = team.name
+            new_team.link = team.link
+            new_team.html = unicode(team.html)
+            new_team.picture_path = team.picture
+            new_team.description = team.info
+            meta.Session.add(new_team)
+        meta.Session.commit()
+        return "Teams updated successfully."
+
+    def parse_majors(self):
+        print request.POST
+        majors_text = request.POST.getone('majors')
+        for school in majors_text.split('\n\n'):
+            school_bits = school.split('\n')
+            school_name = school_bits[0]
+            majors = school_bits[1:]
+
+            school_category = meta.Session.query(model.Category).filter_by(name=school_name).first()
+            if not school_category:
+                school_category = model.Category()
+                school_category.name = school_name
+                meta.Session.add(school_category)
+            old_majors = [ m.name for m in school_category.members]
+
+            for major in majors:
+                if major not in old_majors:
+                    major_suggestable = model.Suggestable()
+                    major_suggestable.name = major
+                    major_suggestable.category = school_category
+                    meta.Session.add(major_suggestable)
+            meta.Session.commit()
+
+    def parse_choices(self):
+        rec = dbRecomender()
+        known_names = {}
+        for item in meta.Session.query(model.Category):
+            known_names[item.name] = item.id
+
+        for item in meta.Session.query(model.Alias):
+            known_names[item.name] = item.refers_to.id
+
+        choices_text = request.POST.getone('choices')
+        unknown_aliases = []
+        for line in choices_text:
+            line_choices = []
+            unknown_line_aliases = []
+            for item in line:
+                if item in known_names:
+                    line_choices.append(known_names[item])
+                else:
+                    unknown_line_aliases.append(item)
+            if unknown_line_aliases:
+                unknown_aliases += unknown_line_aliases
+            else:
+                pass

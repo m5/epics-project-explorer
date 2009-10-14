@@ -3,7 +3,7 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 5
-_modified_time = 1254605891.781122
+_modified_time = 1255554272.8866861
 _template_filename='/home/mfivecoa/src/pylons/epicsrec/epicsrec/templates/rec.mak'
 _template_uri='/rec.mak'
 _template_cache=cache.Cache(__name__, _modified_time)
@@ -77,7 +77,10 @@ def render_body(context,**pageargs):
             # SOURCE LINE 57
             __M_writer(u'           \t<span name="')
             __M_writer(escape(suggestable.id))
-            __M_writer(u'" class="button team">\n\t\t\t\t<span class="button_label"name="abbr">\n\t\t\t\t\t')
+            __M_writer(u'" class="button team">\n\t\t\t\t<span class="button_label"name="')
+            # SOURCE LINE 58
+            __M_writer(escape(c.abbr))
+            __M_writer(u'">\n\t\t\t\t\t')
             # SOURCE LINE 59
             __M_writer(escape(suggestable.name))
             __M_writer(u'\n\t\t\t\t</span>\n\t\t\t\t<span class="information" name="title">\n\t\t\t\t\t')

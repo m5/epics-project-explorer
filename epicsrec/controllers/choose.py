@@ -57,21 +57,22 @@ class ChooseController(BaseController):
         if selected:
             recomender.add_by_sid(sid_hash,selected)
         if deselected:
+            print "$$$$$$$$$$$\ndeselecting%s\n$$$$$$$$$$$$$$$" % deselected
             recomender.remove_by_sid(sid_hash,deselected)
         recomendations = recomender.recomend_by_sid(sid_hash)
         c.recs = map(lambda x: x[0], recomendations)
         c.recs = c.recs[:3]
-        print "---!!!###!!!---"
-        print c.recs
         response.content_type = 'text/xml'
-        return render('/xml_recs.mak')
+        r = render('/xml_recs.mak')
+        print r
+        return r
 
     def info(self, id):
-        for team in g.teams:
-            if team.abbr == id:
-                info = team.soup.find('ul','team_info')
-                return info.prettify()
-        return ''
+        team = Session.query(model.Suggestable).filter_by(id=id).first()
+        if team:
+            return team.html
+        else:
+            return ''
 
     def dict_ajax(self):
         selected = request.POST.getone('selected')

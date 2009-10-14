@@ -22,7 +22,7 @@ def make_map():
     # CUSTOM ROUTES HERE
 
     # Admin area
-    maps.admin_map(map, controller='admin', url='/admin')
+    maps.admin_map(map, controller='database', url='/database')
 
     map.connect('/choose', controller='choose', action='index')
     map.connect('/{controller}/{action}')

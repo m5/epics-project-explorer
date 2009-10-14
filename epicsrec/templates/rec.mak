@@ -55,7 +55,7 @@
 		<div id="teams_container">
 		%for suggestable in c.teams:
            	<span name="${suggestable.id}" class="button team">
-				<span class="button_label"name="abbr">
+				<span class="button_label"name="${c.abbr}">
 					${suggestable.name}
 				</span>
 				<span class="information" name="title">

@@ -1,5 +1,6 @@
 import urllib
 import urllib2
+from urllib2 import URLError, HTTPError
 from BeautifulSoup import BeautifulSoup
 import re
 import os
@@ -13,6 +14,7 @@ class Team():
     info = ''
     html = ''
     soup = ''
+    picture = ''
     def __init__(self):
         pass
     def __repr__(self):
@@ -20,26 +22,7 @@ class Team():
     def __str__(self):
         return self.abbr
 
-def load_teams():
-    cache = 'team_cache.pkl'
-    if os.path.exists(cache):
-        return cPickle.load( open(cache,'r') )
-    else:
-        teams = scrape_teams()
-        cPickle.dump( teams, open(cache,'w') )
-        return teams
-    
-def good_abbr(abbr):
-    r = {'voss@pace':'voss'}
-    abbr = abbr.lower().strip()
-    print abbr
-    if abbr in r.keys():
-        return r[abbr]
-    else:
-        return abbr
-
-def scrape_teams():
-    base_url = "http://engineering.purdue.edu/EPICS/Projects/Teams/"
+def scrape_teams(base_url= "http://engineering.purdue.edu/EPICS/Projects/Teams/"):
     page = urllib2.urlopen(base_url)
     soup = BeautifulSoup(page)
     team_bits = soup.find(id="teams").findAll(re.compile('dt|dd'))
@@ -48,9 +31,7 @@ def scrape_teams():
     paren_match = re.compile(r".*\((.*)\)")
     for team in team_list:
         t = Team()
-        abbr = paren_match.match(team[0].a.string).group(1)
-        if abbr:
-            t.abbr = good_abbr( abbr )
+        t.abbr = paren_match.match(team[0].a.string).group(1)
         link = team[0].a['href']
         if link:
             t.link = base_url + link
@@ -64,14 +45,13 @@ def scrape_teams():
             print e
             continue
         t.soup = BeautifulSoup( html )
+        t.html = t.soup.find('ul','team_info')
         img_src = '/cache/' + t.abbr + '.jpg'
-        img = t.soup.find('ul','team_info').find('img')
+        img = t.html.find('img')
+        t.picture = img_src
         if img:
             img_path = 'epicsrec/public'+img_src
             if not os.path.exists(img_path):
                 urllib.urlretrieve(img['src'], img_path)
                 img['src'] = img_src
     return teams
-
-
-    

@@ -34,23 +34,25 @@ suggestions_table = sa.Table("suggestions",meta.metadata,
 suggestables_table = sa.Table("suggestables",meta.metadata,
         sa.Column("id",       sa.types.Integer,     primary_key=True),
         sa.Column("categoty_id", sa.types.Integer, sa.ForeignKey('categories.id')),
-        sa.Column("name",     sa.types.String(100), nullable=True),
-        sa.Column("long_name",   sa.types.String, nullable=True),
-        sa.Column("link",        sa.types.String, nullable=True),
-        sa.Column("description", sa.types.String, nullable=True),
+        sa.Column("name",     sa.types.Unicode(255), nullable=True),
+        sa.Column("long_name",   sa.types.UnicodeText, nullable=True),
+        sa.Column("html",    sa.types.UnicodeText, nullable=True),
+        sa.Column("link",    sa.types.UnicodeText, nullable=True),
+        sa.Column("picture_path", sa.types.Unicode(255), nullable=True),
+        sa.Column("description", sa.types.UnicodeText, nullable=True),
         sa.Column("weight",   sa.types.Integer,     nullable=False),
         sa.Column("timestamp",sa.types.Integer,     nullable=False)
         )
 
 aliases_table = sa.Table("aliases",meta.metadata,
         sa.Column("id",       sa.types.Integer,     primary_key=True),
-        sa.Column("name",     sa.types.String(100), nullable=True),
+        sa.Column("name",     sa.types.Unicode(100), nullable=True),
         sa.Column("refers_to_id",     sa.types.Integer,     sa.ForeignKey('suggestables.id')),
         )
 
 categories_table = sa.Table("categories",meta.metadata,
         sa.Column("id",       sa.types.Integer,     primary_key=True),
-        sa.Column("name",     sa.types.String(100), nullable=True),
+        sa.Column("name",     sa.types.Unicode(255), nullable=True),
         sa.Column("is_recomendable",     sa.types.Boolean),
         )
 
@@ -60,15 +62,25 @@ suggestables_sessions_table = sa.Table("suggestable_session",meta.metadata,
         )
 
 
-class Category(object): pass
+class Category(object): 
+    def __str__(self):
+        return self.name
+    def __repr__(self):
+        return "<category id=%s, name=%s>"%(self.id,self.name)
 
-class Alias(object): pass
+class Alias(object): 
+    def __str__(self):
+        return self.name
+    def __repr__(self):
+        return "<alias id=%s, name=%s, refers_to=%s>"%(self.id,self.name,self.refers_to.name)
 
 class Suggestable(object):
     def __init__(self,name=None):
         self.name = name
         self.weight = 0
         self.timestamp = int(time.time())
+    def __str__(self):
+        return self.name
     def __repr__(self):
         return "<suggestable id=%s, name=%s, weight=%s>"%(self.id,self.name,self.weight)
 
@@ -90,6 +102,10 @@ class Interaction(object):
     def __init__(self,sid_hash=None):
         self.sid_hash = sid_hash
         self.timestamp = int(time.time())
+    def __str__(self):
+        return self.sid_hash
+    def __repr__(self):
+        return "<interaction sid=%s, timestamp=%s>"%(self.sid_hash,self.timestamp)
 
 
 orm.mapper(Category, categories_table)

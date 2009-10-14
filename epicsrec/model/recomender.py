@@ -4,6 +4,11 @@ from epicsrec.model.meta import Session
 from sqlalchemy import and_, or_
 import os
 
+def debug_print(item):
+    print "##########################"
+    print item
+    print "##########################"
+
 class dbRecomender:
     def __init__(self):
         pass
@@ -25,7 +30,7 @@ class dbRecomender:
 
 
     def add(self,item,relations,weight=1):
-        print item, relations
+        debug_print("Adding %s to %s" % (", ".join(map(str,relations)),item))
         result = Session.query(model.Suggestable).filter_by(id=item)
         if (result.count() > 0):
             item_suggestable = result.first()
@@ -39,12 +44,9 @@ class dbRecomender:
             if (relation == item):
                 continue
 
-            result = Session.query(model.Suggestable).filter_by(name=relation)
-            if result.count() == 0:
-                relation_suggestable = model.Suggestable(relation)
-            else:
-                relation_suggestable = result.first()
-            Session.add(relation_suggestable)
+            result = Session.query(model.Suggestable).filter_by(id=relation)
+            relation_suggestable = result.first()
+            if not relation_suggestable: continue
 
             results = Session.query(model.Suggestion).filter(
                     or_(
@@ -59,7 +61,6 @@ class dbRecomender:
             if (results.count() > 0):
                 suggestion = results.first()
                 suggestion.weight += weight
-                print "adding %s to" % weight, suggestion
                 if suggestion.weight <= 0:
                     Session.delete(suggestion)
                 else:
@@ -86,14 +87,14 @@ class dbRecomender:
             interaction = results.first()
         else:
             interaction = model.Interaction(sid_hash)
-        print interaction
-        print interaction.choices
         choices = map(lambda x: x.id, interaction.choices)
         if interaction.choices:
             self.add(item,choices,weight)
         item_suggestable = Session.query(model.Suggestable).filter_by(id=item).first()
-        if item_suggestable:
+        if item_suggestable and weight > 0:
             interaction.choices.append(item_suggestable)
+        elif weight < 0:
+            interaction.choices.remove(item_suggestable)
 
         Session.add(interaction)
         Session.commit()
@@ -128,8 +129,8 @@ class dbRecomender:
                 high = suggestion.high_choice
                 low = suggestion.low_choice
                 rec = high if high.id != item else low
-                print high.id, low.id, item, rec
-                print "weights:", suggestion.weight, rec.weight
+                if rec.category.name != 'team':
+                    continue
 
                 results = Session.query(model.Suggestable).filter_by(id=rec)
 
@@ -143,5 +144,4 @@ class dbRecomender:
 
         rec_list = [ (x,y/len(items)) for x,y in recomendations.items()]
         rec_list.sort(key=lambda x:-x[1])
-        print "$$$$$$$$$$$$$", rec_list, filter(lambda x: x[0] not in items, rec_list)
         return filter(lambda x: x[0] not in items, rec_list)
