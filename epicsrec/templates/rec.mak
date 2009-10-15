@@ -69,7 +69,7 @@
 		%endfor
 		</div>
 		<span id="description" class="popup"></span>
-		<div id="tutorial">Choose your school...</div>
+		<div id="tutorial"></div>
 		</div>
 	<input type="hidden" id="sid_hash" value="${c.sid_hash}">
     </body>

@@ -11,7 +11,7 @@ function tutor_school(){
         var tut_top = $("#majors_container").offset().top + 100 + "px";
         var tut_left = $("#majors_container").offset().left + 310 + "px";
         $("#tutorial").css({"top":tut_top,"left":tut_left});
-        $("#tutorial").text("Choose your school...");
+        $("#tutorial").text("Choose your college...");
     }
 }
 

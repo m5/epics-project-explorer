@@ -3,7 +3,7 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 5
-_modified_time = 1255554272.8866861
+_modified_time = 1255626147.9225731
 _template_filename='/home/mfivecoa/src/pylons/epicsrec/epicsrec/templates/rec.mak'
 _template_uri='/rec.mak'
 _template_cache=cache.Cache(__name__, _modified_time)
@@ -48,9 +48,9 @@ def render_body(context,**pageargs):
         # SOURCE LINE 39
         for school, majors in c.majors.items():
             # SOURCE LINE 40
-            __M_writer(u"\t\t\t\t<a href='#'><dt>")
+            __M_writer(u"\t\t\t\t<dt><a href='#'>")
             __M_writer(escape(school.replace('_',' ')))
-            __M_writer(u'</dt></a>\n\t\t\t\t<dd style="height: ')
+            __M_writer(u'</a></dt>\n\t\t\t\t<dd style="height: ')
             # SOURCE LINE 41
             __M_writer(escape(3+50*((4+len(majors)) // 5)))
             __M_writer(u'px;">\t\t\t\n')
