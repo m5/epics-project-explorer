@@ -17,6 +17,7 @@ setup(
         "SQLAlchemy>=0.5",
         "BeautifulSoup>=3.0",
         "FormAlchemy>=1.2.1",
+        "Authkit",
     ],
     setup_requires=["PasteScript>=1.6.3"],
     packages=find_packages(exclude=['ez_setup']),
