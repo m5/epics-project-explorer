@@ -8,6 +8,7 @@ from pylons import config
 from pylons.middleware import ErrorHandler, StatusCodeRedirect
 from pylons.wsgiapp import PylonsApp
 from routes.middleware import RoutesMiddleware
+import authkit.authenticate
 
 from epicsrec.config.environment import load_environment
 
@@ -46,6 +47,7 @@ def make_app(global_conf, full_stack=True, static_files=True, **app_conf):
     app = CacheMiddleware(app, config)
 
     # CUSTOM MIDDLEWARE HERE (filtered by error handling middlewares)
+    app = authkit.authenticate.middleware(app, app_conf)
 
     if asbool(full_stack):
         # Handle Python exceptions

@@ -9,6 +9,8 @@ from epicsrec.model import meta
 from epicsrec.lib.base import BaseController, render
 from formalchemy.ext.pylons.admin import FormAlchemyAdminController
 
+from authkit.authorize.pylons_adaptors import authorize
+from authkit.permissions import RemoteUser, ValidAuthKitUser, UserIn
 
 log = logging.getLogger(__name__)
 
@@ -17,5 +19,10 @@ class DatabaseController(BaseController):
     forms = forms
     def Session(self):
         return meta.Session
+
+    @authorize(ValidAuthKitUser())
+    def edit(self, *args, **kwargs):
+        return super(AdminControllerBase, self).edit(*args, **kwargs)
+
 
 DatabaseController = FormAlchemyAdminController(DatabaseController)

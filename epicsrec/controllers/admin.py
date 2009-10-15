@@ -12,11 +12,18 @@ from epicsrec.lib.base import BaseController, render
 from formalchemy.ext.pylons.admin import FormAlchemyAdminController
 from collections import defaultdict
 
+from authkit.authorize.pylons_adaptors import authorize
+from authkit.permissions import RemoteUser, ValidAuthKitUser, UserIn
+
 log = logging.getLogger(__name__)
 
 class AdminController(BaseController):
-    def index(self):
 
+    def index(self):
+       return self.view_controlls()
+
+    @authorize(ValidAuthKitUser())
+    def view_controlls(self):
         c.default_scrape_url = "http://engineering.purdue.edu/EPICS/Projects/Teams/"
         c.formatted_majors = ""
         for school in meta.Session.query(model.Category).filter(model.Category.name != 'team'):
@@ -26,6 +33,7 @@ class AdminController(BaseController):
 
         return render('update_teams.mak')
 
+    @authorize(ValidAuthKitUser())
     def scrape_teams(self):
         team_category = meta.Session.query(model.Category).filter_by(name='team').first()
         new_teams = scrape_teams()
@@ -58,6 +66,7 @@ class AdminController(BaseController):
         meta.Session.commit()
         return "Teams updated successfully."
 
+    @authorize(ValidAuthKitUser())
     def parse_majors(self):
         print request.POST
         majors_text = request.POST.getone('majors')
@@ -83,11 +92,14 @@ class AdminController(BaseController):
                     meta.Session.add(major_suggestable)
             meta.Session.commit()
         return "Majors updated successfully"
+
+    @authorize(ValidAuthKitUser())
     def recompute_top_choices(self):
         rec = dbRecomender()
         rec.recompute_top_choices()
         return "Successfully recomputed top choices"
 
+    @authorize(ValidAuthKitUser())
     def parse_choices(self):
         known_names = {}
         if 'unknown_aliases' in session:
