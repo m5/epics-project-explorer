@@ -36,6 +36,7 @@ fieldset{
     text-align:center;
 }
 .button{
+    cursor:pointer;
     border-style:solid;
     border-width:0px;
     border-color:#202061;
@@ -157,9 +158,14 @@ dl.accordian ul{
     list-style-type:none;
 }
 dl.accordian a{
+    color:#cecaff;
+}
+dl.accordian a:hover{
+    text-decoration:none;
 }
 
 dl.accordian dt{
+    cursor:pointer;
     color:#cecaff;
     text-align: center;
     height:25px;

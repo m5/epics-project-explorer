@@ -61,7 +61,7 @@ function cfade(obj, trans_time){
 
 function init_accordian(){
     $("dl.accordian dd").hide();
-    $("dl.accordian a").click(function(){
+    $("dl.accordian dt").click(function(){
             $("dd:visible").slideUp("slow");
             $(this).next().slideDown("slow",tutor_major);
             return false;

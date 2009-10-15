@@ -37,7 +37,7 @@
 		<div id="majors_container">
 			<dl id="schools" class="accordian">
 			%for school, majors in c.majors.items():
-				<a href='#'><dt>${school.replace('_',' ')}</dt></a>
+				<dt><a href='#'>${school.replace('_',' ')}</a></dt>
 				<dd style="height: ${3+50*((4+len(majors)) // 5)}px;">			
 					%for suggestable in majors:
 						<span name="${suggestable.id}" class="button major ${school}">
