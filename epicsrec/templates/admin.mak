@@ -1,4 +1,3 @@
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html14/loose.tdt">
 <html>
@@ -34,9 +33,11 @@
 
     <body>
 		<div id="container">
+		%for category in categories:
+		
 		<div id="majors_container">
 			<dl id="schools" class="accordian">
-			%for school, majors in c.majors.items():
+			%for school, majors in g.majors.items():
 				<a href='#'><dt>${school.replace('_',' ')}</dt></a>
 				<dd style="height: ${3+50*((4+len(majors)) // 5)}px;">			
 					%for suggestable in majors:
@@ -55,7 +56,7 @@
 		<div id="teams_container">
 		%for suggestable in c.teams:
            	<span name="${suggestable.id}" class="button team">
-				<span class="button_label"name="${c.abbr}">
+				<span class="button_label"name="abbr">
 					${suggestable.name}
 				</span>
 				<span class="information" name="title">

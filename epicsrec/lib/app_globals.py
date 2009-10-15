@@ -2,7 +2,6 @@
 import recomender
 import major_map
 import re
-from epicsrec.lib.scrape_teams import load_teams
 import glob
 from epicsrec.model.recomender import dbRecomender
 import shutil
@@ -30,9 +29,4 @@ class Globals(object):
                 self.major_names.append(name.lower())
         #self.rec = recomender.Recomender()
         #self.rec.load('oldrecs.dump')
-        self.team_info = {}
         p = re.compile(r".*\((.*)\)")
-        self.teams = load_teams()
-        self.team_names = [ t.abbr for t in self.teams ]
-        self.major_map = major_map.generate_map(self.majors)
-        self.identifiers = self.team_names + self.major_names

@@ -6,6 +6,7 @@ refer to the routes manual at http://routes.groovie.org/docs/
 """
 from pylons import config
 from routes import Mapper
+from formalchemy.ext.pylons import maps
 
 def make_map():
     """Create, configure and return the routes Mapper"""
@@ -19,8 +20,14 @@ def make_map():
     map.connect('/error/{action}/{id}', controller='error')
 
     # CUSTOM ROUTES HERE
-    map.connect('/', controller='choose', action='index')
+
+    # Admin area
+    maps.admin_map(map, controller='database', url='/database')
+
+    map.connect('/choose', controller='choose', action='index')
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}')
+    
+
 
     return map
