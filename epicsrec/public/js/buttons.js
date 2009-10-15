@@ -30,18 +30,31 @@ var school_selected = false
 var major_selected = false
 var team_selected = false
 
+function tutor_school(){
+    school_selected = true;
+    if (!major_selected){
+        var tut_top = $("#majors_container").offset().top + 100 + "px";
+        var tut_left = $("#majors_container").offset().left + 310 + "px";
+        $("#tutorial").css({"top":tut_top,"left":tut_left});
+        $("#tutorial").text("Choose your school...");
+    }
+}
+
 function tutor_major(){
     school_selected = true;
     if (!major_selected){
         var tut_top = $("dd:visible").offset().top + 30 + "px";
-        $("#tutorial").css({"top":tut_top,"left":"310px"});
+        var tut_left = $("#majors_container").offset().left + 310 + "px";
+        $("#tutorial").css({"top":tut_top,"left":tut_left});
         $("#tutorial").text("Choose your major...");
     }
 }
 
 function tutor_teams(){
     if(!major_selected){
-        $("#tutorial").css({"top":"400px","left":"350px"});
+        var tut_top = $("#majors_container").offset().top + 400 + "px";
+        var tut_left = $("#majors_container").offset().left + 350 + "px";
+        $("#tutorial").css({"top":tut_top,"left":tut_left});
         $("#tutorial").html("We think you might like one of the teams highlighted below. <p> Click on any teams you are interested in to learn more.");
     }
     major_selected = true
@@ -49,8 +62,10 @@ function tutor_teams(){
 
 function tutor_learn(){
     if(!team_selected){
+        var tut_top = $("#majors_container").offset().top + 570 + "px";
+        var tut_left = $("#majors_container").offset().left + 300 + "px";
+        $("#tutorial").css({"top":tut_top,"left":tut_left});
         $("#tutorial").text("Your selections will be used to help others find teams they like.");
-        $("#tutorial").css({"top":"570px","left":"300px"});
     }
     team_selected = true
 }
@@ -60,6 +75,7 @@ $(document).ready(function(){
     $(".button").mousedown(function(){
         $(this).addClass("depressed");
     });
+    tutor_school();
 
     $(".button").mouseout(function(){
         $(this).removeClass("depressed active");
