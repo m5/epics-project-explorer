@@ -3,6 +3,8 @@ from epicsrec import model
 from epicsrec.model.meta import Session
 from sqlalchemy import and_, or_
 import os
+from collections import defaultdict
+from operator import itemgetter
 
 def debug_print(item):
     print "##########################"
@@ -115,8 +117,20 @@ class dbRecomender:
             return []
 
     def recomend(self,items):
+        recomendations = defaultdict(lambda:0)
+        for item in items:
+            suggestable = Session.query(model.Suggestable).filter_by(id=item).first()
+            debug_print(suggestable)
+            if not suggestable: continue
+            for top_choice in suggestable.top_choices:
+                recomendations[top_choice.choice_id] += top_choice.weight
+        rec_list = sorted(recomendations.iteritems(), key=itemgetter(1), reverse=True)
+        debug_print(rec_list)
+        return [ rec for rec in rec_list if rec[0] not in items ][:3]
+                
+
+    def deep_recomend(self,items):
         recomendations = {}
-        rw = {}
         for item in items:
             if not item: continue
             suggestions = Session.query(model.Suggestion).filter(
@@ -140,8 +154,40 @@ class dbRecomender:
                     recomendations[rec.id] += suggestion.weight/weight
                 else:
                     recomendations[rec.id] = suggestion.weight/weight
-                    rw[rec.id] = weight
 
         rec_list = [ (x,y/len(items)) for x,y in recomendations.items()]
         rec_list.sort(key=lambda x:-x[1])
         return filter(lambda x: x[0] not in items, rec_list)
+
+    def recompute_top_choices(self):
+        for suggestable in Session.query(model.Suggestable):
+            debug_print( suggestable )
+            suggestable.top_choices = []
+            Session.add(suggestable) 
+
+            suggestions = Session.query(model.Suggestion).filter(
+                    or_(
+                        model.Suggestion.high_choice_id==suggestable.id, 
+                        model.Suggestion.low_choice_id==suggestable.id
+                        )
+                    )
+            recomendations = defaultdict(lambda:0)
+            for suggestion in suggestions:
+                high = suggestion.high_choice
+                low = suggestion.low_choice
+                rec = high if high.id != suggestable.id else low
+                if rec.category.name != 'team':
+                    continue
+
+                weight = rec.weight or 1
+                recomendations[rec.id] += suggestion.weight/weight
+
+            rec_list = [ (x,y) for x,y in recomendations.items()]
+            rec_list.sort(key=lambda x:-x[1])
+            for rec in rec_list[:5]:
+                top_choice = model.TopChoice()
+                top_choice.chooser = suggestable
+                top_choice.choice_id = rec[0]
+                top_choice.weight = rec[1]
+                Session.add(top_choice)
+        Session.commit()

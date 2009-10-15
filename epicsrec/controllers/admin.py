@@ -83,6 +83,10 @@ class AdminController(BaseController):
                     meta.Session.add(major_suggestable)
             meta.Session.commit()
         return "Majors updated successfully"
+    def recompute_top_choices(self):
+        rec = dbRecomender()
+        rec.recompute_top_choices()
+        return "Successfully recomputed top choices"
 
     def parse_choices(self):
         known_names = {}

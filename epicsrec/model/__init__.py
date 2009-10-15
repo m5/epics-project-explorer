@@ -61,6 +61,12 @@ suggestables_sessions_table = sa.Table("suggestable_session",meta.metadata,
         sa.Column("suggestion_id", sa.types.Integer, sa.ForeignKey('interactions.id'))
         )
 
+top_choices_table = sa.Table("top_choices",meta.metadata,
+        sa.Column("id",       sa.types.Integer,     primary_key=True),
+        sa.Column("chooser_id",     sa.types.Integer,     sa.ForeignKey('suggestables.id')),
+        sa.Column("choice_id",    sa.types.Integer,     sa.ForeignKey('suggestables.id')),
+        sa.Column("weight",   sa.types.Integer,     nullable=False),
+        )
 
 class Category(object): 
     def __str__(self):
@@ -74,6 +80,12 @@ class Alias(object):
     def __repr__(self):
         return "<alias id=%s, name=%s, refers_to=%s>"%(self.id,self.name,self.refers_to.name)
 
+class TopChoice(object):
+    def __str__(self):
+        return "chooser=%s, choice=%s, weight=%s" % (self.chooser_id, self.choice_id, self.weight)
+    def __repr__(self):
+        return "<topchoice chooser=%s, choice=%s, weight=%s>" % (self.chooser_id, self.choice_id, self.weight)
+    
 class Suggestable(object):
     def __init__(self,name=None):
         self.name = name
@@ -113,10 +125,20 @@ orm.mapper(Alias, aliases_table, properties={
     'refers_to': sa.orm.relation(Suggestable, backref='aliases')
     })
 orm.mapper(Suggestable, suggestables_table, properties={
-    'category': sa.orm.relation(Category, backref='members')
+    'category': sa.orm.relation(Category, backref='members'),
     })
 orm.mapper(Interaction, interactions_table, properties={
     'choices': sa.orm.relation(Suggestable, secondary=suggestables_sessions_table, backref='chosen_by')
+    })
+orm.mapper(TopChoice, top_choices_table, properties={
+    'chooser': sa.orm.relation(  
+        Suggestable, 
+        primaryjoin=top_choices_table.c.chooser_id == suggestables_table.c.id, 
+        backref='top_choices'),
+    'choice': sa.orm.relation(
+        Suggestable, 
+        primaryjoin=top_choices_table.c.choice_id == suggestables_table.c.id, 
+        backref='top_chosen_by'),
     })
 orm.mapper(Suggestion, suggestions_table, properties={
     'low_choice': sa.orm.relation(
