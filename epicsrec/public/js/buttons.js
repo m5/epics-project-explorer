@@ -1,34 +1,9 @@
 var selected_image = '/img/button-yellow-depressed.png';
 var recomended_image = '/img/button-recomended.png';
 var button_image = '/img/button-unlit.png';
-
-function cfade(obj, trans_time){
-    if (typeof trans_time == "undefined"){
-        trans_time = 500;
-    }
-    var o_left = $(obj).offset().left;
-    var o_top  = $(obj).offset().top;
-    var clone = $(obj).clone();
-    $(clone).css({position:"absolute",left:o_left,top:o_top})
-        .addClass("hover")
-        .insertAfter(obj)
-        .fadeOut(trans_time,function(){
-                $(clone).remove();});
-    return obj;
-}
-
-function init_accordian(){
-    $("dl.accordian dd").hide();
-    $("dl.accordian a").click(function(){
-            $("dd:visible").slideUp("slow");
-            $(this).next().slideDown("slow",tutor_major);
-            return false;
-            });
-}
-
-var school_selected = false
-var major_selected = false
-var team_selected = false
+var school_selected = false;
+var major_selected = false;
+var team_selected = false;
 
 function tutor_school(){
     school_selected = true;
@@ -57,7 +32,7 @@ function tutor_teams(){
         $("#tutorial").css({"top":tut_top,"left":tut_left});
         $("#tutorial").html("We think you might like one of the teams highlighted below. <p> Click on any teams you are interested in to learn more.");
     }
-    major_selected = true
+    major_selected = true;
 }
 
 function tutor_learn(){
@@ -67,8 +42,33 @@ function tutor_learn(){
         $("#tutorial").css({"top":tut_top,"left":tut_left});
         $("#tutorial").text("Your selections will be used to help others find teams they like.");
     }
-    team_selected = true
+    team_selected = true;
 }
+function cfade(obj, trans_time){
+    if (typeof trans_time == "undefined"){
+        trans_time = 500;
+    }
+    var o_left = $(obj).offset().left;
+    var o_top  = $(obj).offset().top;
+    var clone = $(obj).clone();
+    $(clone).css({position:"absolute",left:o_left,top:o_top})
+        .addClass("hover")
+        .insertAfter(obj)
+        .fadeOut(trans_time,function(){
+                $(clone).remove();});
+    return obj;
+}
+
+function init_accordian(){
+    $("dl.accordian dd").hide();
+    $("dl.accordian a").click(function(){
+            $("dd:visible").slideUp("slow");
+            $(this).next().slideDown("slow",tutor_major);
+            return false;
+            });
+}
+
+
 
 
 $(document).ready(function(){
@@ -105,8 +105,8 @@ $(document).ready(function(){
                 if ( is_team ){
                     if(!team_selected){
                         tutor_learn();
-                        $("#tutorial").fadeTo(9000,1)
-                        $("#tutorial").fadeOut("slow")
+                        $("#tutorial").fadeTo(9000,1);
+                        $("#tutorial").fadeOut("slow");
                     }
                     $('#information').load( url );
                 }
@@ -140,12 +140,11 @@ $(document).ready(function(){
         });
     $(".button.team").each(function(i){
         var tooltip = $("#description");
+        var description = "";
         var description_suspect =  $(this).children("[name='title']").text() + "<br/>"
-                          +$(this).children("[name='description']").text();
+            +$(this).children("[name='description']").text();
         if (description_suspect != "<br/>"){
-            var description = description_suspect;
-        }else{
-            var description = "";
+            description = description_suspect;
         }
         $(this).mouseover(function(){
             if (description){
