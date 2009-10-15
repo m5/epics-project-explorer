@@ -25,9 +25,8 @@ def make_map():
     maps.admin_map(map, controller='database', url='/database')
 
     map.connect('/choose', controller='choose', action='index')
+    map.connect('/', controller='choose', action='index')
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}')
     
-
-
     return map
