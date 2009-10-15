@@ -70,8 +70,10 @@ function tutor_learn(){
     team_selected = true
 }
 
+
 $(document).ready(function(){
     init_accordian();
+    var ajax_is_processing = false;
     $(".button").mousedown(function(){
         $(this).addClass("depressed");
     });
@@ -86,6 +88,9 @@ $(document).ready(function(){
     $(".button").mouseup(
         function(){
             $(this).removeClass("depressed");
+            if (ajax_is_processing){
+                return;
+            }
             $(".button").stop(1,1);
             var des_name = '';
             var s_name = '';
@@ -96,16 +101,17 @@ $(document).ready(function(){
                 $(this).addClass("selected");
                 s_name = $(this).attr("name");
                 var url = '/choose/info/' + s_name;
-		var is_team = $(this).filter('.team').size();
-		if ( is_team ){
-            if(!team_selected){
-                tutor_learn();
-                $("#tutorial").fadeTo(9000,1)
-                $("#tutorial").fadeOut("slow")
+                var is_team = $(this).filter('.team').size();
+                if ( is_team ){
+                    if(!team_selected){
+                        tutor_learn();
+                        $("#tutorial").fadeTo(9000,1)
+                        $("#tutorial").fadeOut("slow")
+                    }
+                    $('#information').load( url );
+                }
             }
-            $('#information').load( url );
-		}
-            }
+            ajax_is_processing = true;
             $.post('/choose/ajax',
                 {
                 selected: s_name,
@@ -128,6 +134,7 @@ $(document).ready(function(){
                         }
                         tutor_teams();
                     });
+                    ajax_is_processing = false;
                  }
             );
         });
