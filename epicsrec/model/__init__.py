@@ -68,6 +68,13 @@ top_choices_table = sa.Table("top_choices",meta.metadata,
         sa.Column("weight",   sa.types.Integer,     nullable=False),
         )
 
+available_choices_table = sa.Table("available_choices",meta.metadata,
+        sa.Column("id", sa.types.Integer, primary_key=True),
+        sa.Column("chooser_id", sa.types.Integer, sa.ForeignKey('suggestables.id')),
+        sa.Column("choice_id", sa.types.Integer, sa.ForeignKey('suggestables.id')),
+        sa.Column("weight", sa.types.Integer ),
+        )
+
 class Category(object): 
     def __str__(self):
         return self.name
@@ -86,6 +93,12 @@ class TopChoice(object):
     def __repr__(self):
         return "<topchoice chooser=%s, choice=%s, weight=%s>" % (self.chooser_id, self.choice_id, self.weight)
     
+class AvailableChoice(object):
+    def __str__(self):
+        return "chooser=%s, choice=%s, weight=%s" % (self.chooser_id, self.choice_id, self.weight)
+    def __repr__(self):
+        return "<topchoice chooser=%s, choice=%s, weight=%s>" % (self.chooser_id, self.choice_id, self.weight)
+
 class Suggestable(object):
     def __init__(self,name=None):
         self.name = name
@@ -139,6 +152,16 @@ orm.mapper(TopChoice, top_choices_table, properties={
         Suggestable, 
         primaryjoin=top_choices_table.c.choice_id == suggestables_table.c.id, 
         backref='top_chosen_by'),
+    })
+orm.mapper(AvailableChoice, available_choices_table, properties={
+    'chooser': sa.orm.relation(  
+        Suggestable, 
+        primaryjoin=top_choices_table.c.chooser_id == suggestables_table.c.id, 
+        backref='available_choices'),
+    'choice': sa.orm.relation(
+        Suggestable, 
+        primaryjoin=top_choices_table.c.choice_id == suggestables_table.c.id, 
+        backref='available_choice_for'),
     })
 orm.mapper(Suggestion, suggestions_table, properties={
     'low_choice': sa.orm.relation(
