@@ -158,7 +158,7 @@ class AdminController(BaseController):
             return( render('add_aliases.mak') )
         else:
             return( "Choices Updated." )
-
+    @authorize(ValidAuthKitUser())
     def update_available(self):
         if 'selected' in request.POST:
             selected = request.POST.getone('selected')
