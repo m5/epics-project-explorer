@@ -160,7 +160,25 @@ class AdminController(BaseController):
             return( "Choices Updated." )
 
     def update_available(self):
-        c.teams = meta.Session.query(model.Category).filter(model.Category.name == 'team').first().members
-        c.teams.sort(key=lambda s:s.name)
-        c.schools =  meta.Session.query(model.Category).filter(model.Category.name != 'team')
-        return render('update_available.mak')
+        if 'selected' in request.POST:
+            selected = request.POST.getone('selected')
+            availables = defaultdict(list)
+            for selection in (s for s in selected.split(';') if s):
+                major,team = map(int,selection.split(','))
+                availables[major].append(team)
+            schools = meta.Session.query(model.Category).filter(model.Category.name != 'team')
+            for major, choices in availables.iteritems():
+                suggestable = meta.Session.query(model.Suggestable).filter_by(id=major).first()
+                suggestable.available_choices = [ model.AvailableChoice(team) for team in choices ]
+                meta.Session.add(suggestable)
+                print '\n\n################################'
+                print suggestable
+                print suggestable.available_choices
+            meta.Session.commit()
+            return "Update Successful"
+        else:
+         
+            c.teams = meta.Session.query(model.Category).filter(model.Category.name == 'team').first().members
+            c.teams.sort(key=lambda s:s.name)
+            c.schools =  meta.Session.query(model.Category).filter(model.Category.name != 'team')
+            return render('update_available.mak')

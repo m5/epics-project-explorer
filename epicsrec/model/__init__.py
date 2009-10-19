@@ -94,6 +94,8 @@ class TopChoice(object):
         return "<topchoice chooser=%s, choice=%s, weight=%s>" % (self.chooser_id, self.choice_id, self.weight)
     
 class AvailableChoice(object):
+    def __init__(self, choice=None):
+        self.choice_id = choice
     def __str__(self):
         return "chooser=%s, choice=%s, weight=%s" % (self.chooser_id, self.choice_id, self.weight)
     def __repr__(self):
@@ -194,3 +196,4 @@ orm.mapper(Suggestion, suggestions_table, properties={
 #
 #class Reflected(object):
 #    pass
+  

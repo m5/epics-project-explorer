@@ -28,12 +28,13 @@
 	<%def name="js()">
 		${js_links('/js/jquery-1.2.6.pack.js')}
 		${js_links('/js/jquery.color.js')}
-		${js_links('/js/buttons.js')}
+                ${js_links('/js/update_available.js')}
 	</%def>
 
 
     <body>
 		<div id="container">
+                <input type="submit" value="update" class="update"/>
 		%for school in c.schools:
                         <fieldset><legend>${school.name}</legend>
                         %for major in school.members:
@@ -41,7 +42,7 @@
 				<span> ${major.name} </span>
 				%for team in c.teams:
 				<% selected = "selected" if major in team.available_choices else "" %>
-					<span name="${str(major.id) + '+' + str(team.id)}" class="button team ${selected}">
+					<span id="${str(major.id) + ',' + str(team.id)}" class="button team ${selected}">
 						<span class="button_label"name="${c.abbr}">
 							${team.name}
 						</span>
@@ -59,8 +60,7 @@
                         </fieldset>
 		%endfor
 		</div>
-		<span id="description" class="popup"></span>
-		<div id="tutorial"></div>
+                <input type="submit" value="update" class="update"/>
 		</div>
 	<input type="hidden" id="sid_hash" value="${c.sid_hash}">
     </body>
