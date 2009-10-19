@@ -119,6 +119,20 @@ $(document).ready(function(){
                 sid_hash: $('#sid_hash').attr('value')
                 },
                 function(xml){
+                    $(xml).find('avail').each(function(){
+                        var team = $(this).text();
+                        var rec_button = $('[name='+team+']');
+                        cfade(rec_button,700);
+                        $(rec_button).addClass("available");
+                    });
+                    $('.available').each(function(){
+                        var avail_selector = "[name='"+$(this).attr('name')+"']";
+                        var matches = $(xml).find(avail_selector);
+                        if( matches.size()==0){
+                            cfade(this,700);
+                            $(this).removeClass("available");
+                        }
+                    });
                     $(xml).find('rec').each(function(){
                         var team = $(this).text();
                         var rec_button = $('[name='+team+']');

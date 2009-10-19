@@ -50,6 +50,8 @@ fieldset{
     padding:1px;
     z-index:0;
     background-image:url('/img/montage.png');
+    background-position: 0px 0px;
+    background-color: 101031;
 }
 .button.wrapper{
     margin:0px;
@@ -65,9 +67,15 @@ fieldset{
     background-position: -100px 0px;
 }
 .button.recomended{
+    background-position: -350px 0px;
+}
+.button.available{
     background-position: -250px 0px;
 }
 .button.recomended.depressed{
+    background-position: -4000px 0px;
+}
+.button.available.depressed{
     background-position: -3000px 0px;
 }
 .button.selected{
@@ -175,6 +183,7 @@ dl.accordian dt{
     border-color: #303060;
     clear: left;
     padding-top:5px;
+    font-size:11pt;
 }
 dl.accordian dd{
     clear: left;
