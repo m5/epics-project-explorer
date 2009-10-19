@@ -156,11 +156,11 @@ orm.mapper(TopChoice, top_choices_table, properties={
 orm.mapper(AvailableChoice, available_choices_table, properties={
     'chooser': sa.orm.relation(  
         Suggestable, 
-        primaryjoin=top_choices_table.c.chooser_id == suggestables_table.c.id, 
+        primaryjoin=available_choices_table.c.chooser_id == suggestables_table.c.id, 
         backref='available_choices'),
     'choice': sa.orm.relation(
         Suggestable, 
-        primaryjoin=top_choices_table.c.choice_id == suggestables_table.c.id, 
+        primaryjoin=available_choices_table.c.choice_id == suggestables_table.c.id, 
         backref='available_choice_for'),
     })
 orm.mapper(Suggestion, suggestions_table, properties={
