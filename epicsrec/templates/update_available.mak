@@ -34,22 +34,29 @@
 
     <body>
 		<div id="container">
-		%for major in c.majors()
-			%for team in c.teams:
-			${selected = "selected" if major in team.available_choices else ""}
-				<span name="${major.id + '+' + team.id}" class="button team ${selected}">
-					<span class="button_label"name="${c.abbr}">
-						${team.name}
+		%for school in c.schools:
+                        <fieldset><legend>${school.name}</legend>
+                        %for major in school.members:
+			<div id="teams_container">
+				<span> ${major.name} </span>
+				%for team in c.teams:
+				<% selected = "selected" if major in team.available_choices else "" %>
+					<span name="${str(major.id) + '+' + str(team.id)}" class="button team ${selected}">
+						<span class="button_label"name="${c.abbr}">
+							${team.name}
+						</span>
+						<span class="information" name="title">
+							${team.long_name}
+						</span>
+						<span class="information" name="description">
+							${team.description}
+						</span>
+						<a class="information" href="${team.link}"></a>
 					</span>
-					<span class="information" name="title">
-						${team.long_name}
-					</span>
-					<span class="information" name="description">
-						${team.description}
-					</span>
-					<a class="information" href="${team.link}"></a>
-				</span>
-			%endfor
+				%endfor
+			</div>
+                        %endfor
+                        </fieldset>
 		%endfor
 		</div>
 		<span id="description" class="popup"></span>

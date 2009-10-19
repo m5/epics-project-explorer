@@ -158,3 +158,9 @@ class AdminController(BaseController):
             return( render('add_aliases.mak') )
         else:
             return( "Choices Updated." )
+
+    def update_available(self):
+        c.teams = meta.Session.query(model.Category).filter(model.Category.name == 'team').first().members
+        c.teams.sort(key=lambda s:s.name)
+        c.schools =  meta.Session.query(model.Category).filter(model.Category.name != 'team')
+        return render('update_available.mak')
