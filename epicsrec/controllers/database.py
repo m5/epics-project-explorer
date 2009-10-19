@@ -22,7 +22,7 @@ class DatabaseController(BaseController):
 
     @authorize(ValidAuthKitUser())
     def edit(self, *args, **kwargs):
-        return super(AdminControllerBase, self).edit(*args, **kwargs)
+        return super(DatabaseController, self).edit(*args, **kwargs)
 
 
 DatabaseController = FormAlchemyAdminController(DatabaseController)

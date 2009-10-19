@@ -158,15 +158,17 @@ class AdminController(BaseController):
             return( render('add_aliases.mak') )
         else:
             return( "Choices Updated." )
+
     @authorize(ValidAuthKitUser())
     def update_available(self):
         if 'selected' in request.POST:
+            for avail in meta.Session.query(model.AvailableChoice):
+                meta.Session.delete(avail)
             selected = request.POST.getone('selected')
             availables = defaultdict(list)
             for selection in (s for s in selected.split(';') if s):
                 major,team = map(int,selection.split(','))
                 availables[major].append(team)
-            schools = meta.Session.query(model.Category).filter(model.Category.name != 'team')
             for major, choices in availables.iteritems():
                 suggestable = meta.Session.query(model.Suggestable).filter_by(id=major).first()
                 suggestable.available_choices = [ model.AvailableChoice(team) for team in choices ]
@@ -177,8 +179,13 @@ class AdminController(BaseController):
             meta.Session.commit()
             return "Update Successful"
         else:
-         
+            c.avail_for = defaultdict(list)
             c.teams = meta.Session.query(model.Category).filter(model.Category.name == 'team').first().members
             c.teams.sort(key=lambda s:s.name)
             c.schools =  meta.Session.query(model.Category).filter(model.Category.name != 'team')
+            for team, major in [( major.id, avail.choice.id) for school in c.schools for major in school.members for avail in major.available_choices]:
+                print "\n\n$$$$$$$$$$$$$$$$$$$$$$$$$"
+                print team, major
+                c.avail_for[team].append(major)
+            print c.avail_for
             return render('update_available.mak')

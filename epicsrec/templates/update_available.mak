@@ -41,7 +41,7 @@
 			<div id="teams_container">
 				<span> ${major.name} </span>
 				%for team in c.teams:
-				<% selected = "selected" if major in team.available_choices else "" %>
+				<% selected = "selected" if team.id in c.avail_for[major.id] else "poke" %>
 					<span id="${str(major.id) + ',' + str(team.id)}" class="button team ${selected}">
 						<span class="button_label"name="${c.abbr}">
 							${team.name}
