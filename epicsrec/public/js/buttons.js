@@ -67,13 +67,21 @@ function init_accordian(){
             return false;
             });
 }
-
+function deselect_other_majors(keep_selected){
+  $(".button.major.selected").each(function(){
+      if ( $(this).attr('name') != $(keep_selected).attr('name') ){
+        cfade(this,700);
+        $(this).removeClass("selected");
+      }
+    });
+}
 
 
 
 $(document).ready(function(){
     init_accordian();
     var ajax_is_processing = false;
+    var previous_major = false;
     $(".button").mousedown(function(){
         $(this).addClass("depressed");
     });
@@ -109,6 +117,12 @@ $(document).ready(function(){
                         $("#tutorial").fadeOut("slow");
                     }
                     $('#information').load( url );
+                }else{
+                    deselect_other_majors(this);
+                    if (previous_major != '' && des_name == ''){
+                      des_name = $(previous_major).attr('name');
+                    }
+                    previous_major = this;
                 }
             }
             ajax_is_processing = true;
