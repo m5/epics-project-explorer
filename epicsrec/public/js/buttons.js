@@ -67,13 +67,14 @@ function init_accordian(){
             return false;
             });
 }
-function deselect_other_majors(keep_selected){
+function deselect_other_major(keep_selected){
   $(".button.major.selected").each(function(){
       if ( $(this).attr('name') != $(keep_selected).attr('name') ){
         cfade(this,700);
-        $(this).removeClass("selected");
+        return $(this).removeClass("selected").attr('name');
       }
     });
+  return '';
 }
 
 
@@ -118,11 +119,7 @@ $(document).ready(function(){
                     }
                     $('#information').load( url );
                 }else{
-                    deselect_other_majors(this);
-                    if (previous_major != '' && des_name == ''){
-                      des_name = $(previous_major).attr('name');
-                    }
-                    previous_major = this;
+                    des_name = deselect_other_major(this);
                 }
             }
             ajax_is_processing = true;
