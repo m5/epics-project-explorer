@@ -68,12 +68,13 @@ function init_accordian(){
             });
 }
 function deselect_other_major(keep_selected){
-  $(".button.major.selected").each(function(){
-      if ( $(this).attr('name') != $(keep_selected).attr('name') ){
-        cfade(this,700);
-        return $(this).removeClass("selected").attr('name');
-      }
-    });
+  keep_name = $(keep_selected).attr('name');
+  to_deselect = $(".button.major.selected[name!="+keep_name+"]");
+  if( to_deselect.size()){
+    deselection = $(to_deselect).eq(1)
+    cfade(to_deselect,700);
+    return $(to_deselect).removeClass("selected").attr('name');
+  }
   return '';
 }
 
