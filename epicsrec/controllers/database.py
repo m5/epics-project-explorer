@@ -14,15 +14,15 @@ from authkit.permissions import RemoteUser, ValidAuthKitUser, UserIn
 
 log = logging.getLogger(__name__)
 
-class DatabaseController(BaseController):
+class DatabaseControllerBase(BaseController):
     model = model
     forms = forms
+
+    @authorize(ValidAuthKitUser())
+    def __before__(self): pass
+    
     def Session(self):
         return meta.Session
 
-    @authorize(ValidAuthKitUser())
-    def edit(self, *args, **kwargs):
-        return super(DatabaseController, self).edit(*args, **kwargs)
 
-
-DatabaseController = FormAlchemyAdminController(DatabaseController)
+DatabaseController = FormAlchemyAdminController(DatabaseControllerBase)
