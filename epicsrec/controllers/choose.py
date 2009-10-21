@@ -61,12 +61,13 @@ class ChooseController(BaseController):
             recomender.remove_by_sid(sid_hash,deselected)
         recomendations = recomender.recomend_by_sid(sid_hash)
         c.recs = map(lambda x: x[0], recomendations)
-        c.recs = c.recs[:3]
         c.avail = []
         for selection in Session.query(model.Interaction).filter_by(sid_hash=sid_hash).first().choices:
             for avail in selection.available_choices:
                 if avail.choice.id not in c.recs:
                     c.avail.append(avail.choice.id)
+        c.recs = filter(lambda x: x in c.avail, c.recs)
+        c.recs = c.recs[:3]
         response.content_type = 'text/xml'
         r = render('/xml_recs.mak')
         print r
