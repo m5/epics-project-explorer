@@ -64,10 +64,10 @@ class ChooseController(BaseController):
         c.avail = []
         for selection in Session.query(model.Interaction).filter_by(sid_hash=sid_hash).first().choices:
             for avail in selection.available_choices:
-                if avail.choice.id not in c.recs:
-                    c.avail.append(avail.choice.id)
+                c.avail.append(avail.choice.id)
         c.recs = filter(lambda x: x in c.avail, c.recs)
         c.recs = c.recs[:3]
+        c.avail = filter(lambda x: x not in c.recs, c.avail)
         response.content_type = 'text/xml'
         r = render('/xml_recs.mak')
         print r
