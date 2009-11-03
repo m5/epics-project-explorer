@@ -59,14 +59,15 @@ class ChooseController(BaseController):
         if deselected:
             print "$$$$$$$$$$$\ndeselecting%s\n$$$$$$$$$$$$$$$" % deselected
             recomender.remove_by_sid(sid_hash,deselected)
-        recomendations = recomender.recomend_by_sid(sid_hash)
-        c.recs = map(lambda x: x[0], recomendations)
+#        recomendations = recomender.recomend_by_sid(sid_hash)
+#       c.recs = map(lambda x: x[0], recomendations)
         c.avail = []
         for selection in Session.query(model.Interaction).filter_by(sid_hash=sid_hash).first().choices:
             for avail in selection.available_choices:
                 c.avail.append(avail.choice.id)
-        c.recs = filter(lambda x: x in c.avail, c.recs)
-        c.recs = c.recs[:3]
+#       c.recs = filter(lambda x: x in c.avail, c.recs)
+#       c.recs = c.recs[:3]
+        c.recs = []
         c.avail = filter(lambda x: x not in c.recs, c.avail)
         response.content_type = 'text/xml'
         r = render('/xml_recs.mak')
