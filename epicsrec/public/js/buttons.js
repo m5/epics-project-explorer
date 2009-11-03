@@ -109,9 +109,9 @@ function send_and_recommend(data){
                  cfade(this,700);
                  $(this).removeClass("recomended");
                }
-               ajax_is_processing = false;
                tutor_teams();
              });
+         ajax_is_processing = false;
          });
 }
 
@@ -132,6 +132,7 @@ $(document).ready(function(){
     $(".button").mouseup(function(){
         $(this).removeClass("depressed");
         if (ajax_is_processing){
+          alert("oops!");
           return;
         }
         $(".button").stop(1,1);
