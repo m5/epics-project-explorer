@@ -62,12 +62,14 @@ function cfade(obj, trans_time){
 
 function init_accordian(){
     $("dl.accordian dd").hide();
-    $("dl.accordian dt").click(function(){
-            $("dd:visible").slideUp("slow");
-            $(this).next().slideDown("slow",tutor_major);
-            return false;
-            });
+    $("dl.accordian dt").click(accordian_slide);
 }
+function accordian_slide(){
+    $("dd:visible").slideUp("slow").prev().click(accordian_slide);
+    $(this).unbind('click').next().slideDown("slow",tutor_major);
+    return false;
+}
+          
 function deselect_other_major(keep_selected){
   keep_name = $(keep_selected).attr('name');
   to_deselect = $(".button.major.selected[name!="+keep_name+"]");
